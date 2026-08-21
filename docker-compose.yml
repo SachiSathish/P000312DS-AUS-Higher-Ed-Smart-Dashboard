@@ -13,6 +13,7 @@ services:
       DB_NAME: ${DB_NAME}
     volumes:
       - ./api:/api
+      - ./models:/models
     depends_on:
       - db
 
@@ -31,3 +32,4 @@ services:
 volumes:
   api:
   pgdata:
+  models:

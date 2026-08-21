@@ -19,7 +19,25 @@ DB_PORT ?= 5432
 ##@ Main targets
 build: build_api ## Build the pipeline
 run: run_api
-stop: docker compose down
+api_bash: 
+	docker compose exec api bash
+
+api_cmd:
+	docker compose exec api printenv DB_USERNAME
+
+stop: 
+	docker compose down
+
+
+migration_setup:
+	docker compose exec --workdir /models api alembic init migrations
+
+migration_revision:
+	@read -p "Revision name: " REV_NAME; \
+	docker compose exec --workdir /models api alembic revision --autogenerate -m "$$REV_NAME"
+
+migration_head:
+	docker compose exec api -w /models upgrade head
 
 .PHONY: build_api
 build_api:
