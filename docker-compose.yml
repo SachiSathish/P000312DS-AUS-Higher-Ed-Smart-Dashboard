@@ -1,0 +1,15 @@
+
+services:
+  api:
+    container_name: APIService
+    build: ./api
+    ports:
+      - 80:80
+    volumes:
+      - ./api:/api
+
+volumes:
+  api:
+  data:
+  models:
+  ingestion:
