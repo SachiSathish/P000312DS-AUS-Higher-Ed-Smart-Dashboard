@@ -14,7 +14,7 @@ app = FastAPI()
 engine = create_engine(DATABASE_URL)
 
 @app.get("/db_test")
-async def root():
+async def db_test():
     with Session(engine) as session:
         res = [str(row) for row in session.execute(sqlalchemy.text("SELECT version();")).all()]
         print(", ".join(res))
@@ -24,5 +24,5 @@ async def root():
 
 
 @app.get("/testsss")
-async def root():
+async def test_route():
     return {"message": "Hello World"}
