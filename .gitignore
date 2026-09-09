@@ -3,3 +3,6 @@ data/raw/*
 __pycache__/
 *.py[cod]
 *$py.class
+
+# Local environment secrets
+.env
