@@ -1,0 +1,140 @@
+[
+  {
+    "source_name":"education",
+    "title":"Student Enrolment Pivot Table",
+    "url":"https:\/\/www.education.gov.au\/higher-education-statistics\/resources\/perturbed-student-enrolments-pivot-table-2024",
+    "source_page":"https:\/\/www.education.gov.au\/higher-education-statistics\/student-data\/selected-higher-education-statistics-2024-student-data"
+  },
+  {
+    "source_name":"education",
+    "title":"Student Load Pivot Table",
+    "url":"https:\/\/www.education.gov.au\/higher-education-statistics\/resources\/perturbed-student-load-pivot-table-2024",
+    "source_page":"https:\/\/www.education.gov.au\/higher-education-statistics\/student-data\/selected-higher-education-statistics-2024-student-data"
+  },
+  {
+    "source_name":"education",
+    "title":"Award Course Completions Pivot Table",
+    "url":"https:\/\/www.education.gov.au\/higher-education-statistics\/resources\/perturbed-award-course-completions-pivot-table-2024",
+    "source_page":"https:\/\/www.education.gov.au\/higher-education-statistics\/student-data\/selected-higher-education-statistics-2024-student-data"
+  },
+  {
+    "source_name":"education",
+    "title":"2024 Student summary tables",
+    "url":"https:\/\/www.education.gov.au\/higher-education-statistics\/resources\/2024-student-summary-tables",
+    "source_page":"https:\/\/www.education.gov.au\/higher-education-statistics\/student-data\/selected-higher-education-statistics-2024-student-data"
+  },
+  {
+    "source_name":"education",
+    "title":"2024 Student summary time series",
+    "url":"https:\/\/www.education.gov.au\/higher-education-statistics\/resources\/2024-student-summary-time-series",
+    "source_page":"https:\/\/www.education.gov.au\/higher-education-statistics\/student-data\/selected-higher-education-statistics-2024-student-data"
+  },
+  {
+    "source_name":"education",
+    "title":"2024 Section 1 - Commencing students",
+    "url":"https:\/\/www.education.gov.au\/higher-education-statistics\/resources\/2024-section-1-commencing-students",
+    "source_page":"https:\/\/www.education.gov.au\/higher-education-statistics\/student-data\/selected-higher-education-statistics-2024-student-data"
+  },
+  {
+    "source_name":"education",
+    "title":"2024 Section 2 - All students",
+    "url":"https:\/\/www.education.gov.au\/higher-education-statistics\/resources\/2024-section-2-all-students",
+    "source_page":"https:\/\/www.education.gov.au\/higher-education-statistics\/student-data\/selected-higher-education-statistics-2024-student-data"
+  },
+  {
+    "source_name":"education",
+    "title":"2024 Section 3 - Commencing student load",
+    "url":"https:\/\/www.education.gov.au\/higher-education-statistics\/resources\/2024-section-3-commencing-student-load",
+    "source_page":"https:\/\/www.education.gov.au\/higher-education-statistics\/student-data\/selected-higher-education-statistics-2024-student-data"
+  },
+  {
+    "source_name":"education",
+    "title":"2024 Section 4 - All student load",
+    "url":"https:\/\/www.education.gov.au\/higher-education-statistics\/resources\/2024-section-4-all-student-load",
+    "source_page":"https:\/\/www.education.gov.au\/higher-education-statistics\/student-data\/selected-higher-education-statistics-2024-student-data"
+  },
+  {
+    "source_name":"education",
+    "title":"2024 Section 5 - Liability status categories",
+    "url":"https:\/\/www.education.gov.au\/higher-education-statistics\/resources\/2024-section-5-liability-status-categories",
+    "source_page":"https:\/\/www.education.gov.au\/higher-education-statistics\/student-data\/selected-higher-education-statistics-2024-student-data"
+  },
+  {
+    "source_name":"education",
+    "title":"2024 Section 6 - First Nations students",
+    "url":"https:\/\/www.education.gov.au\/higher-education-statistics\/resources\/2024-section-6-first-nations-students",
+    "source_page":"https:\/\/www.education.gov.au\/higher-education-statistics\/student-data\/selected-higher-education-statistics-2024-student-data"
+  },
+  {
+    "source_name":"education",
+    "title":"2024 Section 7 - Overseas students",
+    "url":"https:\/\/www.education.gov.au\/higher-education-statistics\/resources\/2024-section-7-overseas-students",
+    "source_page":"https:\/\/www.education.gov.au\/higher-education-statistics\/student-data\/selected-higher-education-statistics-2024-student-data"
+  },
+  {
+    "source_name":"education",
+    "title":"2024 Section 8 - Special courses",
+    "url":"https:\/\/www.education.gov.au\/higher-education-statistics\/resources\/2024-section-8-special-courses",
+    "source_page":"https:\/\/www.education.gov.au\/higher-education-statistics\/student-data\/selected-higher-education-statistics-2024-student-data"
+  },
+  {
+    "source_name":"education",
+    "title":"2024 Section 9 Ethnicity related data",
+    "url":"https:\/\/www.education.gov.au\/higher-education-statistics\/resources\/2024-section-9-ethnicity-related-data",
+    "source_page":"https:\/\/www.education.gov.au\/higher-education-statistics\/student-data\/selected-higher-education-statistics-2024-student-data"
+  },
+  {
+    "source_name":"education",
+    "title":"2024 Section 10 Open Universities Australia",
+    "url":"https:\/\/www.education.gov.au\/higher-education-statistics\/resources\/2024-section-10-open-universities-australia",
+    "source_page":"https:\/\/www.education.gov.au\/higher-education-statistics\/student-data\/selected-higher-education-statistics-2024-student-data"
+  },
+  {
+    "source_name":"education",
+    "title":"2024 Section 11 Equity groups",
+    "url":"https:\/\/www.education.gov.au\/higher-education-statistics\/resources\/2024-section-11-equity-groups",
+    "source_page":"https:\/\/www.education.gov.au\/higher-education-statistics\/student-data\/selected-higher-education-statistics-2024-student-data"
+  },
+  {
+    "source_name":"education",
+    "title":"2024 Section 12 Academic organisational units",
+    "url":"https:\/\/www.education.gov.au\/higher-education-statistics\/resources\/2024-section-12-academic-organisational-units",
+    "source_page":"https:\/\/www.education.gov.au\/higher-education-statistics\/student-data\/selected-higher-education-statistics-2024-student-data"
+  },
+  {
+    "source_name":"education",
+    "title":"2024 Section 13 Private Universities (Table C) and Non-University Higher Education Institutions",
+    "url":"https:\/\/www.education.gov.au\/higher-education-statistics\/resources\/2024-section-13-private-universities-table-c-and-nonuniversity-higher-education-institutions",
+    "source_page":"https:\/\/www.education.gov.au\/higher-education-statistics\/student-data\/selected-higher-education-statistics-2024-student-data"
+  },
+  {
+    "source_name":"education",
+    "title":"2024 Section 14 Award course completions",
+    "url":"https:\/\/www.education.gov.au\/higher-education-statistics\/resources\/2024-section-14-award-course-completions",
+    "source_page":"https:\/\/www.education.gov.au\/higher-education-statistics\/student-data\/selected-higher-education-statistics-2024-student-data"
+  },
+  {
+    "source_name":"education",
+    "title":"2024 Section 15 Attrition, success and retention",
+    "url":"https:\/\/www.education.gov.au\/higher-education-statistics\/resources\/2024-section-15-attrition-success-and-retention",
+    "source_page":"https:\/\/www.education.gov.au\/higher-education-statistics\/student-data\/selected-higher-education-statistics-2024-student-data"
+  },
+  {
+    "source_name":"education",
+    "title":"2024 Section 16 Equity performance data",
+    "url":"https:\/\/www.education.gov.au\/higher-education-statistics\/resources\/2024-section-16-equity-performance-data",
+    "source_page":"https:\/\/www.education.gov.au\/higher-education-statistics\/student-data\/selected-higher-education-statistics-2024-student-data"
+  },
+  {
+    "source_name":"education",
+    "title":"2024 Section 17 Completion Rates",
+    "url":"https:\/\/www.education.gov.au\/higher-education-statistics\/resources\/2024-section-17-completion-rates",
+    "source_page":"https:\/\/www.education.gov.au\/higher-education-statistics\/student-data\/selected-higher-education-statistics-2024-student-data"
+  },
+  {
+    "source_name":"education",
+    "title":"Guide to using the Tertiary Collection of Student Data Power BI report",
+    "url":"https:\/\/www.education.gov.au\/higher-education-statistics\/resources\/guide-using-tertiary-collection-student-data-power-bi-report",
+    "source_page":"https:\/\/www.education.gov.au\/higher-education-statistics\/student-data\/selected-higher-education-statistics-2024-student-data"
+  }
+]
