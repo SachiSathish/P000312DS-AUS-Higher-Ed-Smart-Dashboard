@@ -9,7 +9,6 @@ from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
-import pgvector.sqlalchemy
 
 # revision identifiers, used by Alembic.
 revision: str = '4bbea3ed9493'
@@ -75,7 +74,6 @@ def upgrade() -> None:
     sa.Column('full_text', sa.Text(), nullable=True),
     sa.Column('effective_date', sa.Date(), nullable=True),
     sa.Column('source_url', sa.String(length=1000), nullable=True),
-    sa.Column('embedding', pgvector.sqlalchemy.vector.VECTOR(dim=1536), nullable=True),
     sa.Column('data_source_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['data_source_id'], ['data_sources.id'], ),
     sa.PrimaryKeyConstraint('id')

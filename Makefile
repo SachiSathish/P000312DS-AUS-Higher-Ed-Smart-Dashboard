@@ -37,7 +37,7 @@ migration_revision:
 	docker compose exec --workdir /models api alembic revision --autogenerate -m "$$REV_NAME"
 
 migration_head:
-	docker compose exec api -w /models upgrade head
+	docker compose exec --workdir /models api alembic upgrade head
 
 .PHONY: build_api
 build_api:
