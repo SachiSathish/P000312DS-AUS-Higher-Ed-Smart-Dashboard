@@ -8,7 +8,7 @@ DB_USERNAME = os.getenv("DB_USERNAME")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_NAME = os.getenv("DB_NAME")
 DB_PORT = os.getenv("DB_PORT")
-DATABASE_URL = f"postgresql://{DB_USERNAME}:{DB_PASSWORD}@db:{DB_PORT}/{DB_NAME}"
+DATABASE_URL = f"postgresql+psycopg2://{DB_USERNAME}:{DB_PASSWORD}@db:{DB_PORT}/{DB_NAME}"
 
 app = FastAPI()
 engine = create_engine(DATABASE_URL)
