@@ -24,6 +24,23 @@ from models import Base
 
 target_metadata = Base.metadata
 
+# Build the database URL from the same environment variables docker-compose gives
+# the api container (the same ones api/app.py uses), so migrations work for every
+# team member without editing alembic.ini. If they aren't set, the URL in
+# alembic.ini is used instead.
+# The driver is named explicitly: SQLAlchemy 2.1+ defaults plain postgresql:// to
+# psycopg (v3), but the api image installs psycopg2-binary.
+if os.getenv("DB_USERNAME"):
+    db_url = "postgresql+psycopg2://{user}:{password}@{host}:{port}/{name}".format(
+        user=os.getenv("DB_USERNAME"),
+        password=os.getenv("DB_PASSWORD", ""),
+        host=os.getenv("DB_HOST", "db"),
+        port=os.getenv("DB_PORT", "5432"),
+        name=os.getenv("DB_NAME"),
+    )
+    # alembic.ini values go through configparser, so a literal % must be doubled
+    config.set_main_option("sqlalchemy.url", db_url.replace("%", "%%"))
+
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")

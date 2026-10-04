@@ -8,8 +8,9 @@ Design: star-schema-ish.
   citizenship status, year) combination, so demographics / fields of
   study / provider-type questions can all be answered by slicing the
   same fact table instead of four disconnected datasets.
-- Policy is kept separate (it's document-like, not tabular) with a
-  pgvector embedding column for RAG/semantic search over policy text.
+- Policy is kept separate (it's document-like, not tabular). Its full_text
+  is stored so embeddings can be generated from it later if needed — see
+  the PolicyEmbedding blueprint at the bottom of this file.
 - DataSource logs where every row came from, since Han wants
   multi-source / multi-modal data and provenance matters for the report.
 """
@@ -21,7 +22,6 @@ from sqlalchemy import (
     String, Integer, Float, Date, DateTime, ForeignKey, Text, UniqueConstraint
 )
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from pgvector.sqlalchemy import Vector
 
 
 class Base(DeclarativeBase):
@@ -109,8 +109,9 @@ class EnrollmentStat(Base):
 
 class Policy(Base):
     """
-    Immigration / education policy document or summary. Embedding column
-    lets the AI layer do semantic search / RAG over policy text later.
+    Immigration / education policy document or summary.
+    full_text is kept so a future embeddings table can be built from it
+    without changing this table (see PolicyEmbedding below).
     """
     __tablename__ = "policies"
 
@@ -121,10 +122,6 @@ class Policy(Base):
     full_text: Mapped[Optional[str]] = mapped_column(Text)
     effective_date: Mapped[Optional[date]] = mapped_column(Date)
     source_url: Mapped[Optional[str]] = mapped_column(String(1000))
-
-    # Adjust dimension (1536 shown for OpenAI-style embeddings) once the
-    # embedding model is chosen.
-    embedding: Mapped[Optional[List[float]]] = mapped_column(Vector(1536), nullable=True)
 
     data_source_id: Mapped[Optional[int]] = mapped_column(ForeignKey("data_sources.id"))
     data_source: Mapped[Optional["DataSource"]] = relationship()
@@ -145,3 +142,47 @@ class DataSource(Base):
     url: Mapped[Optional[str]] = mapped_column(String(1000))
     retrieved_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     license_notes: Mapped[Optional[str]] = mapped_column(Text)
+
+
+# ---------------------------------------------------------------------------
+# FUTURE: embeddings (not part of the current schema)
+# ---------------------------------------------------------------------------
+# The project doesn't use embeddings or LLMs. If a future team needs semantic
+# search over policy text, embeddings go in their OWN table rather than as a
+# column on policies. That way:
+#   - no existing table changes, so it's one new migration that's easy to undo
+#   - several embedding models (and dimensions) can coexist for comparison
+#   - long documents can be split into chunks, one row per chunk
+#
+# To add it:
+#   1. Add `pgvector` to api/requirements.txt, then `docker compose up -d --build`
+#      (the db service already uses the pgvector/pgvector image, so the
+#      database side needs no change).
+#   2. Uncomment the import and class below.
+#   3. Run `make migration_revision` and name it e.g. "add policy embeddings".
+#   4. Edit the new migration file (Alembic doesn't add these itself):
+#        - with the other imports at the top:   import pgvector.sqlalchemy
+#        - first line inside upgrade():         op.execute("CREATE EXTENSION IF NOT EXISTS vector")
+#   5. Run `make migration_head`.
+#
+# from pgvector.sqlalchemy import Vector
+#
+# class PolicyEmbedding(Base):
+#     """One embedding per chunk of a policy's full_text, per model."""
+#     __tablename__ = "policy_embeddings"
+#     __table_args__ = (
+#         UniqueConstraint("policy_id", "model_name", "chunk_index",
+#                          name="uq_policy_embedding_chunk"),
+#     )
+#
+#     id: Mapped[int] = mapped_column(primary_key=True)
+#     policy_id: Mapped[int] = mapped_column(
+#         ForeignKey("policies.id", ondelete="CASCADE"), nullable=False)
+#     model_name: Mapped[str] = mapped_column(String(100), nullable=False)
+#     chunk_index: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+#     chunk_text: Mapped[str] = mapped_column(Text, nullable=False)
+#     # Set the dimension to match the chosen model's output size.
+#     embedding: Mapped[List[float]] = mapped_column(Vector(1536), nullable=False)
+#     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+#
+#     policy: Mapped["Policy"] = relationship()
