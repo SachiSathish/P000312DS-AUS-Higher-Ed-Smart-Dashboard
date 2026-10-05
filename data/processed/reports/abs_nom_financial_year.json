@@ -1,0 +1,104 @@
+{
+  "output_file": "data/processed/staging/abs_nom_financial_year.csv",
+  "target_table": null,
+  "staging_reason": "no migration table in models.py",
+  "source_files": [
+    "bronze/abs-migration/abs_nom-arrivals-departures-by-visa_financial-year.csv"
+  ],
+  "raw_rows": 5814,
+  "processed_rows": 5814,
+  "rows_removed": {},
+  "rows_aggregated": 0,
+  "duplicate_count_before": 0,
+  "duplicate_count_after": 0,
+  "suppressed_to_null": 0,
+  "value_parsing": {
+    "missing_in_source": 0,
+    "suppressed_to_null": 0,
+    "suppression_markers_seen": [],
+    "unparseable_to_null": 0,
+    "unparseable_examples": [],
+    "explicit_zeros": 61
+  },
+  "aggregate_reconciliation_rows_differing": {
+    "visa_group_code 1": 176,
+    "visa_group_code 9": 154,
+    "visa_group_code 16": 152,
+    "region_code AUS": 353
+  },
+  "category_values": {
+    "financial_year": [
+      "2004-05",
+      "2005-06",
+      "2006-07",
+      "2007-08",
+      "2008-09",
+      "2009-10",
+      "2010-11",
+      "2011-12",
+      "2012-13",
+      "2013-14",
+      "2014-15",
+      "2015-16",
+      "2016-17",
+      "2017-18",
+      "2018-19",
+      "2019-20",
+      "2020-21",
+      "2021-22",
+      "2022-23"
+    ],
+    "visa_group": [
+      "Australian Citizen",
+      "New Zealand Citizen (subclass 444)",
+      "Other Visas",
+      "Permanent visa - Family",
+      "Permanent visa - Other permanent visas",
+      "Permanent visa - Skill",
+      "Permanent visa - Special Eligibility and humanitarian",
+      "Permanent visa - Total",
+      "Temporary visa - Higher education sector",
+      "Temporary visa - Other temporary visas",
+      "Temporary visa - Student other",
+      "Temporary visa - Temporary work (skilled)",
+      "Temporary visa - Total",
+      "Temporary visa - Visitor",
+      "Temporary visa - Vocational Education and Training sector",
+      "Temporary visa - Working Holiday",
+      "Total"
+    ],
+    "migration_type": [
+      "NOM arrivals",
+      "NOM departures"
+    ],
+    "region": [
+      "Australia",
+      "Australian Capital Territory",
+      "New South Wales",
+      "Northern Territory",
+      "Queensland",
+      "South Australia",
+      "Tasmania",
+      "Victoria",
+      "Western Australia"
+    ],
+    "is_aggregate": [
+      "false",
+      "true"
+    ]
+  },
+  "warnings": [
+    "visa_group_code 1: differs from its components on 176 rows -> kept, is_aggregate=true",
+    "visa_group_code 9: differs from its components on 154 rows -> kept, is_aggregate=true",
+    "visa_group_code 16: differs from its components on 152 rows -> kept, is_aggregate=true",
+    "region_code AUS: differs from its components on 353 rows -> kept, is_aggregate=true",
+    "ABS values are rounded to the nearest 10"
+  ],
+  "measure": "persons (NOM arrivals / departures)",
+  "year_convention": "financial year ending 30 June (TIME_PERIOD 2005 -> 2004-05)",
+  "transformations": [
+    "SDMX labelled CSV reduced to one value per row",
+    "ABS codes kept as text",
+    "redundant aggregate rows removed / non-reconciling ones flagged"
+  ]
+}

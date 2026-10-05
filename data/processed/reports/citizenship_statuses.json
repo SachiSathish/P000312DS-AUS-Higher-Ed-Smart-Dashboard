@@ -1,0 +1,28 @@
+{
+  "output_file": "data/processed/citizenship_statuses.csv",
+  "target_table": "citizenship_statuses",
+  "source_files": [
+    "bronze/education-higher-ed/education_he-student-enrolments-pivot_2024.xlsx"
+  ],
+  "raw_rows": 2,
+  "processed_rows": 2,
+  "rows_removed": {},
+  "rows_aggregated": 0,
+  "duplicate_count_before": 0,
+  "duplicate_count_after": 0,
+  "suppressed_to_null": 0,
+  "category_values": {
+    "status": [
+      "domestic",
+      "international"
+    ]
+  },
+  "warnings": [
+    "country_of_origin blank: HESSC has no country dimension"
+  ],
+  "measure": "n/a (dimension)",
+  "year_convention": "n/a",
+  "transformations": [
+    "Domestic -> domestic, Overseas -> international"
+  ]
+}

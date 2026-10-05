@@ -1,0 +1,75 @@
+{
+  "output_file": "data/processed/institutions.csv",
+  "target_table": "institutions",
+  "source_files": [
+    "bronze/education-higher-ed/education_he-student-enrolments-pivot_2024.xlsx",
+    "bronze/cricos-register/cricos_institutions_asat-2026-08-09.csv",
+    "bronze/cricos-register/cricos_courses_asat-2026-08-09.csv"
+  ],
+  "raw_rows": 1554,
+  "raw_rows_note": "rows in the CRICOS institutions CSV; plus HESSC institution labels",
+  "hessc_institution_labels": 46,
+  "processed_rows": 178,
+  "rows_removed": {
+    "blank_trailing_rows": 2,
+    "exact_duplicate_rows": 0,
+    "cricos_secondary_registrations_of_listed_universities": 2,
+    "cricos_not_higher_education": 1367,
+    "quarantined_no_provider_type": 0,
+    "quarantined_name_collisions": 5
+  },
+  "rows_aggregated": 0,
+  "duplicate_count_before": 0,
+  "duplicate_count_after": 0,
+  "suppressed_to_null": 0,
+  "scope": {
+    "rule": "HESSC universities + CRICOS providers with >=1 course at an HE-only AQF level",
+    "he_only_levels": [
+      "Associate Degree",
+      "Bachelor Degree",
+      "Bachelor Honours Degree",
+      "Doctoral Degree",
+      "Masters Degree (Coursework)",
+      "Masters Degree (Extended)",
+      "Masters Degree (Research)"
+    ],
+    "cricos_providers": 1552,
+    "cricos_providers_in_he_scope": 185
+  },
+  "category_values": {
+    "provider_type": [
+      "private",
+      "public"
+    ],
+    "state": [
+      "ACT",
+      "NSW",
+      "NT",
+      "QLD",
+      "SA",
+      "TAS",
+      "VIC",
+      "WA"
+    ],
+    "sector": []
+  },
+  "provider_type_counts": {
+    "private": 131,
+    "public": 47
+  },
+  "warnings": [
+    "HESSC institution 'Batchelor Institute of Indigenous Tertiary Education' is not on CRICOS: provider_type unknown, not loaded (its enrolments go to quarantine)",
+    "HESSC institution 'Carnegie Mellon University Australia' is not on CRICOS: provider_type unknown, not loaded (its enrolments go to quarantine)",
+    "2 names shared by 5 CRICOS providers; quarantined (see quarantine/institutions_name_collisions.csv)",
+    "teqsa_id is blank for every row: TEQSA register not collected",
+    "sector is blank for every row: no source distinguishes university / TAFE / other"
+  ],
+  "measure": "n/a (dimension table)",
+  "year_convention": "n/a; CRICOS register as at 2026-08-09",
+  "transformations": [
+    "CRICOS Government -> public, Private -> private",
+    "HESSC names kept as the canonical name for the universities HESSC lists",
+    "CRICOS registrations sharing a crosswalked university's CRICOS name dropped as secondary registrations",
+    "whitespace trimmed/collapsed; codes kept as text"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "output_file": "data/processed/policies.csv",
+  "target_table": "policies",
+  "source_files": [
+    "bronze/legislation-policy/legislation_overseas-students-titles_asat-2026-08-09.json",
+    "bronze/legislation-policy/homeaffairs_ministerial-direction-115_2025-11-14.pdf"
+  ],
+  "raw_rows": 171,
+  "raw_rows_note": "170 legislation titles + 1 PDF",
+  "processed_rows": 138,
+  "rows_removed": {
+    "exact duplicate records (same register id, title, collection)": 33
+  },
+  "rows_aggregated": 0,
+  "duplicate_count_before": 33,
+  "duplicate_count_after": 0,
+  "suppressed_to_null": 0,
+  "category_values": {
+    "category": [
+      "education",
+      "immigration"
+    ]
+  },
+  "category_counts": {
+    "education": 134,
+    "immigration": 4
+  },
+  "immigration_titles": [
+    "Migration Act 1958 - Notice under subsection 96(2) - Specification of Pass Mark in relation to Applications for Skilled - Australian-sponsored Overseas Students (Residence) (Class DE) Subclass 881 Visas - June 2001",
+    "Migration Act 1958 - Notice under subsection 96(1) - Specification of Pool Mark in relation to Applications for Skilled - Australian-sponsored Overseas Students (Residence) (Class DE) Subclass 881 Visas - June 2001",
+    "Migration Legislation Amendment (Overseas Students) Act 2000",
+    "Direction No. 115- Order for considering and disposing of offshore Subclass 500 (Student) visa applications"
+  ],
+  "warnings": [
+    "17 titles repeat (e.g. several 'Overseas Students Charge Regulations (Amendment)'); they are different instruments -- load key must be (title, source_url), not title alone",
+    "legislation rows have no summary, full_text or effective_date: the titles dump does not carry them",
+    "category is assigned by the title rule in clean_policies.py; check immigration_titles"
+  ],
+  "measure": "n/a (documents)",
+  "year_convention": "effective_date = commencement date (MD115 only)",
+  "transformations": [
+    "title whitespace collapsed",
+    "category by title rule",
+    "source_url from register id",
+    "MD115 text extracted with pypdf"
+  ]
+}

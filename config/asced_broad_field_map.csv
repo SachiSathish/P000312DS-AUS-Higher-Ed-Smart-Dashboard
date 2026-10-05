@@ -1,0 +1,15 @@
+field_code,field_name,broad_field,status,note
+01,Natural and Physical Sciences,STEM,PROPOSED,Needs team sign-off; no agreed mapping existed in the repo on 2026-10-04
+02,Information Technology,STEM,PROPOSED,
+03,Engineering and Related Technologies,STEM,PROPOSED,
+04,Architecture and Building,other,PROPOSED,
+05,"Agriculture, Environmental and Related Studies",STEM,PROPOSED,
+06,Health,other,PROPOSED,
+07,Education,Social Studies,PROPOSED,
+08,Management and Commerce,Social Studies,PROPOSED,
+09,Society and Culture,Social Studies,PROPOSED,
+10,Creative Arts,other,PROPOSED,
+11,"Food, Hospitality and Personal Services",other,PROPOSED,
+12,Mixed Field Programmes,other,PROPOSED,
+,Non-Award Courses,other,PROPOSED,HESSC category with no ASCED broad-field code
+,Not provided,other,PROPOSED,HESSC category: field not reported by the provider; kept so counts are not lost

@@ -1,0 +1,35 @@
+{
+  "output_file": "data/processed/data_sources.csv",
+  "target_table": "data_sources",
+  "source_files": [
+    "MANIFEST.csv"
+  ],
+  "raw_rows": 20,
+  "processed_rows": 20,
+  "rows_removed": {},
+  "rows_aggregated": 0,
+  "duplicate_count_before": 0,
+  "duplicate_count_after": 0,
+  "suppressed_to_null": 0,
+  "category_values": {
+    "source_type": [
+      "api",
+      "csv",
+      "scrape"
+    ],
+    "license_notes": [
+      "CC BY 2.5 AU",
+      "CC BY 3.0 AU",
+      "CC BY 4.0"
+    ]
+  },
+  "warnings": [
+    "source_type 'scrape' is used for direct xlsx/pdf downloads: the schema has no 'download' value -- team decision needed"
+  ],
+  "measure": "n/a",
+  "year_convention": "retrieved_at in UTC",
+  "transformations": [
+    "description -> name",
+    "retrieved_utc -> retrieved_at (UTC, no offset)"
+  ]
+}

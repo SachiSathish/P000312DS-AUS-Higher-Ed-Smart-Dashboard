@@ -1,0 +1,138 @@
+{
+  "output_file": "data/processed/enrollment_stats.csv",
+  "target_table": "enrollment_stats",
+  "source_files": [
+    "bronze/education-higher-ed/education_he-student-enrolments-pivot_2024.xlsx"
+  ],
+  "extraction": "pivot cache via transform/extract_pivot_cache.py; 235,292 records declared, 235,292 read",
+  "raw_rows": 235292,
+  "processed_rows": 4381,
+  "rows_removed": {
+    "quarantined: HESSC group of many providers, not one institution; provider_type mixed": 14365,
+    "quarantined: institution not in institutions.csv (not on CRICOS, provider_type unknown)": 109
+  },
+  "rows_aggregated": 216437,
+  "aggregation_note": "HESSC records are finer than the grain (gender, level, attendance, commencing...); they are summed to institution x field x citizenship x year",
+  "duplicate_count_before": 220769,
+  "duplicate_groups_before": 4332,
+  "duplicate_count_after": 0,
+  "suppressed_to_null": 0,
+  "value_parsing": {
+    "missing_in_source": 0,
+    "suppressed_to_null": 0,
+    "suppression_markers_seen": [],
+    "unparseable_to_null": 0,
+    "unparseable_examples": [],
+    "explicit_zeros": 32975
+  },
+  "reconciliation": {
+    "raw_enrolment_total": 8053491,
+    "loaded_total": 7394208,
+    "quarantined_total": 659283,
+    "quarantined_by_reason": {
+      "HESSC group of many providers, not one institution; provider_type mixed": 658735,
+      "institution not in institutions.csv (not on CRICOS, provider_type unknown)": 548
+    },
+    "single_field_count_mismatches": 0
+  },
+  "category_values": {
+    "institution_name": [
+      "Australian Catholic University",
+      "Avondale University",
+      "Bond University",
+      "CQUniversity",
+      "Charles Darwin University",
+      "Charles Sturt University",
+      "Curtin University",
+      "Deakin University",
+      "Edith Cowan University",
+      "Federation University Australia",
+      "Flinders University",
+      "Griffith University",
+      "James Cook University",
+      "La Trobe University",
+      "Macquarie University",
+      "Monash University",
+      "Murdoch University",
+      "Queensland University of Technology",
+      "RMIT University",
+      "Southern Cross University",
+      "Swinburne University of Technology",
+      "The Australian National University",
+      "The University of Adelaide",
+      "The University of Melbourne",
+      "The University of New England",
+      "The University of Newcastle",
+      "The University of Notre Dame Australia",
+      "The University of Queensland",
+      "The University of Sydney",
+      "The University of Western Australia",
+      "Torrens University Australia",
+      "University of Canberra",
+      "University of Divinity",
+      "University of New South Wales",
+      "University of South Australia",
+      "University of Southern Queensland",
+      "University of Tasmania",
+      "University of Technology Sydney",
+      "University of Wollongong",
+      "University of the Sunshine Coast",
+      "Victoria University",
+      "Western Sydney University"
+    ],
+    "field_name": [
+      "Agriculture, Environmental and Related Studies",
+      "Architecture and Building",
+      "Creative Arts",
+      "Education",
+      "Engineering and Related Technologies",
+      "Food, Hospitality and Personal Services",
+      "Health",
+      "Information Technology",
+      "Management and Commerce",
+      "Mixed Field Programmes",
+      "Natural and Physical Sciences",
+      "Non-Award Courses",
+      "Not provided",
+      "Society and Culture"
+    ],
+    "field_code": [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06",
+      "07",
+      "08",
+      "09",
+      "10",
+      "11",
+      "12"
+    ],
+    "status": [
+      "domestic",
+      "international"
+    ],
+    "year": [
+      "2020",
+      "2021",
+      "2022",
+      "2023",
+      "2024"
+    ]
+  },
+  "warnings": [
+    "fields_of_study.broad_field uses config/asced_broad_field_map.csv, status PROPOSED -- needs team sign-off",
+    "Quarantined enrolments by year (share of all HESSC enrolments): 2020: 126,068 (7.8%), 2021: 117,530 (7.3%), 2022: 114,812 (7.4%), 2023: 138,525 (8.7%), 2024: 162,348 (9.7%)",
+    "country_of_origin is blank for every citizenship row: HESSC has no country dimension"
+  ],
+  "measure": "Enrolment Count (all-student headcount of course enrolments; commencing + continuing; not EFTSL)",
+  "year_convention": "calendar year (HESSC reference year), 2020-2024",
+  "transformations": [
+    "Citizenship Domestic -> domestic, Overseas -> international",
+    "field = Broad_Field_of_Education_Primary; field_code from the CRICOS ASCED labels",
+    "summed over gender, course level, attendance mode/type, commencing status, special course, state",
+    "HESSC provider groups, institutions without provider_type, and null counts -> quarantine"
+  ]
+}
