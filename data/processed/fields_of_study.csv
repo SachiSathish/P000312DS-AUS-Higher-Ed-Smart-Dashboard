@@ -1,0 +1,15 @@
+name,broad_field,field_code,source_file
+Natural and Physical Sciences,STEM,01,bronze/education-higher-ed/education_he-student-enrolments-pivot_2024.xlsx;bronze/cricos-register/cricos_courses_asat-2026-08-09.csv
+Information Technology,STEM,02,bronze/education-higher-ed/education_he-student-enrolments-pivot_2024.xlsx;bronze/cricos-register/cricos_courses_asat-2026-08-09.csv
+Engineering and Related Technologies,STEM,03,bronze/education-higher-ed/education_he-student-enrolments-pivot_2024.xlsx;bronze/cricos-register/cricos_courses_asat-2026-08-09.csv
+Architecture and Building,other,04,bronze/education-higher-ed/education_he-student-enrolments-pivot_2024.xlsx;bronze/cricos-register/cricos_courses_asat-2026-08-09.csv
+"Agriculture, Environmental and Related Studies",STEM,05,bronze/education-higher-ed/education_he-student-enrolments-pivot_2024.xlsx;bronze/cricos-register/cricos_courses_asat-2026-08-09.csv
+Health,other,06,bronze/education-higher-ed/education_he-student-enrolments-pivot_2024.xlsx;bronze/cricos-register/cricos_courses_asat-2026-08-09.csv
+Education,Social Studies,07,bronze/education-higher-ed/education_he-student-enrolments-pivot_2024.xlsx;bronze/cricos-register/cricos_courses_asat-2026-08-09.csv
+Management and Commerce,Social Studies,08,bronze/education-higher-ed/education_he-student-enrolments-pivot_2024.xlsx;bronze/cricos-register/cricos_courses_asat-2026-08-09.csv
+Society and Culture,Social Studies,09,bronze/education-higher-ed/education_he-student-enrolments-pivot_2024.xlsx;bronze/cricos-register/cricos_courses_asat-2026-08-09.csv
+Creative Arts,other,10,bronze/education-higher-ed/education_he-student-enrolments-pivot_2024.xlsx;bronze/cricos-register/cricos_courses_asat-2026-08-09.csv
+"Food, Hospitality and Personal Services",other,11,bronze/education-higher-ed/education_he-student-enrolments-pivot_2024.xlsx;bronze/cricos-register/cricos_courses_asat-2026-08-09.csv
+Mixed Field Programmes,other,12,bronze/education-higher-ed/education_he-student-enrolments-pivot_2024.xlsx;bronze/cricos-register/cricos_courses_asat-2026-08-09.csv
+Non-Award Courses,other,,bronze/education-higher-ed/education_he-student-enrolments-pivot_2024.xlsx;bronze/cricos-register/cricos_courses_asat-2026-08-09.csv
+Not provided,other,,bronze/education-higher-ed/education_he-student-enrolments-pivot_2024.xlsx;bronze/cricos-register/cricos_courses_asat-2026-08-09.csv

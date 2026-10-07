@@ -1,0 +1,45 @@
+hessc_name,cricos_provider_code,match_method,note
+The Australian National University,00120C,normalised_name,
+University of Canberra,00212K,normalised_name,
+Australian Catholic University,00004G,trading_name,
+Avondale University,02731D,normalised_name,
+Charles Sturt University,00005F,normalised_name,
+Macquarie University,00002J,normalised_name,
+Southern Cross University,01241G,normalised_name,
+The University of New England,00003G,normalised_name,
+The University of Newcastle,00109J,normalised_name,
+The University of Sydney,00026A,normalised_name,
+University of New South Wales,00098G,normalised_name,
+University of Technology Sydney,00099F,normalised_name,
+University of Wollongong,00102E,normalised_name,
+Western Sydney University,00917K,normalised_name,
+Batchelor Institute of Indigenous Tertiary Education,,unmatched,Not on the CRICOS register; provider_type cannot be established from repository sources
+Charles Darwin University,00300K,normalised_name,
+Bond University,00017B,normalised_name,
+CQUniversity,00219C,manual,CRICOS name is Central Queensland University; CQUniversity is its trading brand
+Griffith University,00233E,normalised_name,
+James Cook University,00117J,normalised_name,
+Queensland University of Technology,00213J,normalised_name,
+The University of Queensland,00025B,normalised_name,
+University of Southern Queensland,00244B,manual,CRICOS also has 02225M (USQ - Sydney Education Centre) under the same name; 00244B is the main registration
+University of the Sunshine Coast,01595D,normalised_name,
+Carnegie Mellon University Australia,,unmatched,Not on the CRICOS register; provider_type cannot be established from repository sources
+Flinders University,00114A,normalised_name,
+The University of Adelaide,00123M,normalised_name,Not the same entity as 04249J Adelaide University (the 2026 merged university); kept separate
+Torrens University Australia,03389E,manual,CRICOS name is Torrens University Australia Limited
+University of South Australia,00121B,normalised_name,
+University of Tasmania,00586B,normalised_name,
+Deakin University,00113B,normalised_name,
+Federation University Australia,00103D,normalised_name,
+La Trobe University,00115M,normalised_name,
+Monash University,00008C,normalised_name,
+RMIT University,00122A,trading_name,CRICOS name is Royal Melbourne Institute of Technology
+Swinburne University of Technology,00111D,normalised_name,
+The University of Melbourne,00116K,normalised_name,
+University of Divinity,01037A,normalised_name,Not the same entity as 02948J Australian University College of Divinity
+Victoria University,00124K,manual,CRICOS also has 02475D under the same name; 00124K is the original university registration
+Curtin University,00301J,normalised_name,
+Edith Cowan University,00279B,normalised_name,
+Murdoch University,00125J,normalised_name,
+The University of Notre Dame Australia,01032F,normalised_name,
+The University of Western Australia,00126G,normalised_name,

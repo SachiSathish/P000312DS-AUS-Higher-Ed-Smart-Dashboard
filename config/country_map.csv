@@ -1,0 +1,24 @@
+source_name,standard_name,source,status,note
+"China, Peoples Republic of (excl SARs)",China,homeaffairs,PROPOSED,Both sources list Hong Kong and Macau separately so both labels exclude the SARs
+"Congo, Dem Republic of The","Congo, Democratic Republic of",homeaffairs,PROPOSED,
+Czechia,Czech Republic,homeaffairs,PROPOSED,
+"Germany, Fed Republic of",Germany,homeaffairs,PROPOSED,
+Hong Kong (SAR of the PRC),Hong Kong SAR,homeaffairs,PROPOSED,
+"Ireland, Republic of",Ireland,homeaffairs,PROPOSED,
+"Korea, North","Korea, Democratic People's Republic of (North)",homeaffairs,PROPOSED,
+"Korea, South","Korea, Republic of (South)",homeaffairs,PROPOSED,
+Lao Peoples Dem Republic,Laos,homeaffairs,PROPOSED,
+Macau (SAR of the PRC),Macau,homeaffairs,PROPOSED,
+Micronesia,"Micronesia, Federated States of",homeaffairs,PROPOSED,
+"Netherlands, Kingdom of The",Netherlands,homeaffairs,PROPOSED,Aruba Curacao and Saint Maarten are listed separately in Home Affairs
+Pitcairn,Pitcairn Islands,homeaffairs,PROPOSED,
+American Samoa,"Samoa, American",homeaffairs,PROPOSED,
+Republic of South Sudan,South Sudan,homeaffairs,PROPOSED,
+"Saint Helena, Ascension and Tristan Da Cunha",St Helena,homeaffairs,PROPOSED,
+Saint Lucia,St Lucia,homeaffairs,PROPOSED,
+St Vincent & the Grenadines,St Vincent and the Grenadines,homeaffairs,PROPOSED,
+Eswatini,Swaziland,homeaffairs,PROPOSED,Same country renamed 2018; PRISMS still uses the old name
+Syrian Arab Republic,Syria,homeaffairs,PROPOSED,
+Virgin Islands (British),"Virgin Islands, British",homeaffairs,PROPOSED,
+"Yemen, Republic of",Yemen,homeaffairs,PROPOSED,
+British Indian Ocean Terrtories,British Indian Ocean Territory,homeaffairs,PROPOSED,Source spelling error

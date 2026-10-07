@@ -1,0 +1,62 @@
+{
+  "output_file": "data/processed/fields_of_study.csv",
+  "target_table": "fields_of_study",
+  "source_files": [
+    "bronze/education-higher-ed/education_he-student-enrolments-pivot_2024.xlsx",
+    "bronze/cricos-register/cricos_courses_asat-2026-08-09.csv"
+  ],
+  "raw_rows": 14,
+  "processed_rows": 14,
+  "rows_removed": {
+    "mapping rows not used by HESSC": 0
+  },
+  "rows_aggregated": 0,
+  "duplicate_count_before": 0,
+  "duplicate_count_after": 0,
+  "suppressed_to_null": 0,
+  "category_values": {
+    "name": [
+      "Agriculture, Environmental and Related Studies",
+      "Architecture and Building",
+      "Creative Arts",
+      "Education",
+      "Engineering and Related Technologies",
+      "Food, Hospitality and Personal Services",
+      "Health",
+      "Information Technology",
+      "Management and Commerce",
+      "Mixed Field Programmes",
+      "Natural and Physical Sciences",
+      "Non-Award Courses",
+      "Not provided",
+      "Society and Culture"
+    ],
+    "broad_field": [
+      "STEM",
+      "Social Studies",
+      "other"
+    ],
+    "field_code": [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06",
+      "07",
+      "08",
+      "09",
+      "10",
+      "11",
+      "12"
+    ]
+  },
+  "warnings": [
+    "broad_field mapping is PROPOSED (config/asced_broad_field_map.csv); needs team sign-off"
+  ],
+  "measure": "n/a (dimension)",
+  "year_convention": "n/a",
+  "transformations": [
+    "ASCED broad field names from HESSC; codes from CRICOS; broad_field from config"
+  ]
+}
