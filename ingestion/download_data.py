@@ -1,5 +1,5 @@
 """
-Download every verified source into data/raw/ and record provenance in MANIFEST.csv.
+Download every verified source into data/bronze/ and record provenance in MANIFEST.csv.
 
 This is the bronze layer described in DATA-SOURCES.md: raw files exactly as published, never
 edited, each one recorded with its source URL, retrieval timestamp, size and SHA-256. Cleaning
@@ -24,7 +24,7 @@ from urllib.parse import urljoin
 
 import requests
 
-BRONZE = Path("data/raw")          # gitignored in the team repo; source files never get committed
+BRONZE = Path("data/bronze")       # gitignored in the team repo; source files never get committed
 MANIFEST = Path("data/MANIFEST.csv")
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                     "(KHTML, like Gecko) Chrome/126.0 Safari/537.36"}
@@ -111,8 +111,14 @@ SCRAPED = [
      PERIOD + r"-summary-infographic/pdf",
      "education_intl-students-summary-infographic_{period}.pdf",
      "Monthly summary infographic"),
-    # Higher education statistics (HESSC) are collected by Shangavi's scraper (topics 1 and 2).
 ]
+
+# Higher education statistics (HESSC, topics 1 and 2), folded in from Shangavi's scraper.
+# Two hops: the landing page lists one resource page per table, and each resource page carries
+# the rotating /download/ link. The landing page is per collection year.
+HESSC_YEAR = "2024"
+HESSC = (f"{EDU}/higher-education-statistics/student-data/"
+         f"selected-higher-education-statistics-{HESSC_YEAR}-student-data")
 
 
 def fetch_legislation(dest):
@@ -170,6 +176,38 @@ def resolve(page, pattern):
     return urljoin(page, newest.group(1)), f"{yr}-{mo:02d}"
 
 
+def hessc_jobs():
+    """
+    Resolve every HESSC table to a download job in the same shape as STATIC.
+
+    Filenames follow the bronze convention, e.g. the resource page
+    perturbed-student-enrolments-pivot-table-2024 becomes
+    education_he-student-enrolments-pivot_2024.xlsx.
+    """
+    r = requests.get(HESSC, headers=UA, timeout=90)
+    r.raise_for_status()
+    pages = {}   # slug -> link text; the landing page repeats each link, first title wins
+    for slug, text in re.findall(
+            r'<a[^>]*href="[^"]*/higher-education-statistics/resources/([^"/#?]+)"[^>]*>(.*?)</a>',
+            r.text, re.S):
+        title = re.sub(r"<[^>]+>|&nbsp;|\s+", " ", text).strip().removeprefix(f"{HESSC_YEAR} ")
+        pages.setdefault(slug, title)
+
+    jobs = []
+    for slug, title in pages.items():
+        page = f"{EDU}/higher-education-statistics/resources/{slug}"
+        p = requests.get(page, headers=UA, timeout=90)
+        p.raise_for_status()
+        short = (slug.replace("perturbed-", "").replace("-pivot-table", "-pivot")
+                 .replace(f"{HESSC_YEAR}-", "").replace(f"-{HESSC_YEAR}", ""))
+        for href, ext in dict.fromkeys(
+                re.findall(r'href="([^"]*/download/[^"]*/document/(\w+))"', p.text)):
+            jobs.append(("education-higher-ed", f"education_he-{short}_{HESSC_YEAR}.{ext}",
+                         urljoin(page, href), f"HESSC {HESSC_YEAR}: {title}", "CC BY 4.0",
+                         None))
+    return jobs
+
+
 def download(url, dest):
     """Stream a file to disk, returning (bytes, sha256)."""
     dest.parent.mkdir(parents=True, exist_ok=True)
@@ -198,6 +236,11 @@ def main():
                  "CC BY 4.0", "ODATA"))
 
     rows, failed = [], []
+    try:
+        jobs.extend(hessc_jobs())
+    except Exception as e:
+        print(f"HESSC resolve FAILED: {type(e).__name__}: {e}")
+        failed.append(("HESSC landing page", str(e)))
     for i, (folder, name, url, desc, lic, scrape) in enumerate(jobs, 1):
         dest = BRONZE / folder / name
         print(f"[{i:2d}/{len(jobs)}] {name}")
