@@ -15,6 +15,8 @@ rows in place instead of duplicating them:
   policies              title + source_url   (138 policies share 121 titles, so title alone collides)
   enrollment_stats      institution + field + citizenship + year  (uq_enrollment_grain)
 Foreign keys are looked up from those keys; source_file in each CSV resolves data_source_id.
+
+It then loads data/processed/staging/ (visas, migration, PRISMS) through load_staging.py.
 """
 
 import os
@@ -113,8 +115,12 @@ def main():
         port=os.getenv("DB_PORT", "5432"),
         name=os.getenv("DB_NAME", "dashboard"),
     )
-    for table, n in load(create_engine(url)).items():
+    engine = create_engine(url)
+    for table, n in load(engine).items():
         print(f"{table:22s} {n:6,d} rows")
+
+    from load_staging import load_staging  # same folder; bulk-loads the large staging files
+    load_staging(engine)
 
 
 if __name__ == "__main__":

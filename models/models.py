@@ -13,13 +13,22 @@ Design: star-schema-ish.
   the PolicyEmbedding blueprint at the bottom of this file.
 - DataSource logs where every row came from, since Han wants
   multi-source / multi-modal data and provenance matters for the report.
+- Immigration and international-student data (Home Affairs student visas,
+  ABS net overseas migration, PRISMS) are stored at full published detail
+  in their own fact tables (VisaLodgement, VisaGrant, VisaDecision,
+  MigrationFlow, IntlStudentEnrolment). Each source is a separate published
+  cube with its own grain and year convention, so they are not forced into
+  EnrollmentStat; citizenship_country uses one agreed spelling
+  (config/country_map.csv) so the sources can be compared by country.
+  Summary views for the dashboard are created in the migration.
 """
 
 from datetime import date, datetime
 from typing import Optional, List
 
 from sqlalchemy import (
-    String, Integer, Float, Date, DateTime, ForeignKey, Text, UniqueConstraint
+    String, Integer, SmallInteger, Float, Boolean, Date, DateTime, ForeignKey, Text,
+    UniqueConstraint, Index
 )
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
@@ -142,6 +151,117 @@ class DataSource(Base):
     url: Mapped[Optional[str]] = mapped_column(String(1000))
     retrieved_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     license_notes: Mapped[Optional[str]] = mapped_column(Text)
+
+
+# ---------------------------------------------------------------------------
+# Immigration and international-student fact tables
+# ---------------------------------------------------------------------------
+# Loaded from data/processed/staging/ by transform/load_staging.py, one row per
+# row of the cleaned file. Columns follow data/processed/dictionaries/*.md.
+# Measures are nullable: blank in the source means unknown, never 0.
+
+class VisaDetailMixin:
+    """Columns shared by the three Home Affairs student visa tables."""
+    id: Mapped[int] = mapped_column(primary_key=True)
+    financial_year: Mapped[str] = mapped_column(String(20), nullable=False)  # e.g. '2024-25'
+    quarter: Mapped[str] = mapped_column(String(2), nullable=False)          # Q1 = Jul-Sep
+    month: Mapped[int] = mapped_column(SmallInteger, nullable=False)         # 7 = July
+    client_location: Mapped[Optional[str]] = mapped_column(String(50))   # In / Outside Australia
+    lodgement_channel: Mapped[Optional[str]] = mapped_column(String(30))  # Internet / Paper
+    sector: Mapped[Optional[str]] = mapped_column(String(100))            # e.g. Higher Education Sector
+    applicant_type: Mapped[Optional[str]] = mapped_column(String(30))     # Primary / Secondary
+    provider_state: Mapped[Optional[str]] = mapped_column(String(30))
+    gender: Mapped[Optional[str]] = mapped_column(String(30))
+    age_group: Mapped[Optional[str]] = mapped_column(String(30))
+    citizenship_country: Mapped[Optional[str]] = mapped_column(String(100))   # agreed spelling
+    citizenship_country_source: Mapped[Optional[str]] = mapped_column(String(150))  # as published
+    data_source_id: Mapped[Optional[int]] = mapped_column(ForeignKey("data_sources.id"))
+
+
+class VisaLodgement(VisaDetailMixin, Base):
+    """Student visa applications lodged (Home Affairs BP0015)."""
+    __tablename__ = "visa_lodgements"
+    __table_args__ = (
+        Index("ix_visa_lodgements_year", "financial_year"),
+        Index("ix_visa_lodgements_country", "citizenship_country"),
+    )
+
+    lodged: Mapped[Optional[int]] = mapped_column(Integer)
+
+
+class VisaGrant(VisaDetailMixin, Base):
+    """Student visas granted, with the visa held before the grant."""
+    __tablename__ = "visa_grants"
+    __table_args__ = (
+        Index("ix_visa_grants_year", "financial_year"),
+        Index("ix_visa_grants_country", "citizenship_country"),
+    )
+
+    last_visa_category: Mapped[Optional[str]] = mapped_column(String(100))
+    granted: Mapped[Optional[int]] = mapped_column(Integer)
+
+
+class VisaDecision(VisaDetailMixin, Base):
+    """Student visa decisions. Grant rate = granted / (granted + refused);
+    it is derived, never stored."""
+    __tablename__ = "visa_decisions"
+    __table_args__ = (
+        Index("ix_visa_decisions_year", "financial_year"),
+        Index("ix_visa_decisions_country", "citizenship_country"),
+    )
+
+    granted: Mapped[Optional[int]] = mapped_column(Integer)
+    refused: Mapped[Optional[int]] = mapped_column(Integer)
+
+
+class MigrationFlow(Base):
+    """ABS net overseas migration (NOM) arrivals and departures by visa group.
+    Both ABS releases share this table: period_type says whether period is a
+    financial year ('2004-05') or a calendar year ('2004').
+    Rows with is_aggregate = true are published totals that do not equal
+    their parts -- exclude them before summing."""
+    __tablename__ = "migration_flows"
+    __table_args__ = (
+        Index("ix_migration_flows_period", "period_type", "period"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    period_type: Mapped[str] = mapped_column(String(10), nullable=False)  # 'financial' | 'calendar'
+    period: Mapped[str] = mapped_column(String(10), nullable=False)
+    visa_group_code: Mapped[Optional[str]] = mapped_column(String(20))
+    visa_group: Mapped[Optional[str]] = mapped_column(String(100))
+    migration_type_code: Mapped[Optional[str]] = mapped_column(String(10))  # 1 arrivals, 2 departures
+    migration_type: Mapped[Optional[str]] = mapped_column(String(30))
+    region_code: Mapped[Optional[str]] = mapped_column(String(10))           # AUS = Australia
+    region: Mapped[Optional[str]] = mapped_column(String(50))
+    persons: Mapped[Optional[int]] = mapped_column(Integer)        # rounded to 10 by ABS
+    is_aggregate: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    data_source_id: Mapped[Optional[int]] = mapped_column(ForeignKey("data_sources.id"))
+
+
+class IntlStudentEnrolment(Base):
+    """PRISMS international student enrolments, cumulative year-to-date.
+    Each month's values already include earlier months: never add months
+    together -- use the latest month of each year."""
+    __tablename__ = "intl_student_enrolments"
+    __table_args__ = (
+        Index("ix_intl_student_enrolments_year", "year", "month"),
+        Index("ix_intl_student_enrolments_country", "citizenship_country"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    year: Mapped[int] = mapped_column(SmallInteger, nullable=False)
+    month: Mapped[int] = mapped_column(SmallInteger, nullable=False)   # YTD up to this month
+    citizenship_country: Mapped[Optional[str]] = mapped_column(String(100))
+    citizenship_country_source: Mapped[Optional[str]] = mapped_column(String(150))
+    state: Mapped[Optional[str]] = mapped_column(String(10))                     # NAT = national
+    sector: Mapped[Optional[str]] = mapped_column(String(50))
+    provider_type: Mapped[Optional[str]] = mapped_column(String(20))             # public | private
+    new_to_australia: Mapped[Optional[bool]] = mapped_column(Boolean)
+    ends_this_year: Mapped[Optional[bool]] = mapped_column(Boolean)    # blank = not reported
+    ytd_enrolments: Mapped[Optional[int]] = mapped_column(Integer)
+    ytd_commencements: Mapped[Optional[int]] = mapped_column(Integer)
+    data_source_id: Mapped[Optional[int]] = mapped_column(ForeignKey("data_sources.id"))
 
 
 # ---------------------------------------------------------------------------
