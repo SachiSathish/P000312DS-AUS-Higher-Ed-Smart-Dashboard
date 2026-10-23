@@ -13,6 +13,13 @@ also offer them.
 
 provider_type: CRICOS "Institution Type"  Government -> public, Private -> private.
 state:         CRICOS "Postal Address State" (the registered postal address, not campus).
+
+The CRICOS register is downloaded as the current version, but HESSC reports past years. A
+crosswalked university that has since left the register (e.g. The University of Adelaide and
+University of South Australia, merged into Adelaide University in 2026) keeps its HESSC rows:
+its provider_type and state then come from the provider_type / state columns of
+config/institution_crosswalk.csv, with a warning. A code that is neither on the register nor
+has those columns filled still stops the run.
 sector, teqsa_id: left blank -- no source in the repository provides them.
 """
 
@@ -73,13 +80,24 @@ def main():
     if missing:
         raise SystemExit(f"HESSC institutions missing from config/institution_crosswalk.csv: {missing}")
     matched = xw[xw["cricos_provider_code"] != ""].copy()
-    unknown = sorted(set(matched["cricos_provider_code"]) - set(inst.index))
-    if unknown:
-        raise SystemExit(f"Crosswalk codes not on the CRICOS register: {unknown}")
+    off_register = ~matched["cricos_provider_code"].isin(inst.index)
+    for col in ("provider_type", "state"):          # optional fallback columns
+        if col not in matched:
+            matched[col] = ""
+    no_fallback = off_register & ((matched["provider_type"] == "") | (matched["state"] == ""))
+    if no_fallback.any():
+        raise SystemExit("Crosswalk codes not on the CRICOS register and without provider_type/state "
+                         f"in config/institution_crosswalk.csv: {sorted(matched.loc[no_fallback, 'cricos_provider_code'])}")
+    if not set(matched.loc[off_register, "provider_type"]) <= set(PROVIDER_TYPE.values()):
+        raise SystemExit("config/institution_crosswalk.csv provider_type must be public or private")
+    for _, r in matched[off_register].iterrows():
+        warnings.append(f"HESSC institution '{r['hessc_name']}' ({r['cricos_provider_code']}) is no longer on the "
+                        f"current CRICOS register: provider_type/state taken from config/institution_crosswalk.csv")
+    removed["crosswalked_not_on_current_register"] = int(off_register.sum())
     hessc_rows = pd.DataFrame({
         "name": matched["hessc_name"].values,
         "cricos_provider_code": matched["cricos_provider_code"].values,
-        "source_file": f"{HESSC};{CRICOS_INST}",
+        "source_file": [HESSC if off else f"{HESSC};{CRICOS_INST}" for off in off_register],
     })
     unmatched = xw.loc[xw["cricos_provider_code"] == "", "hessc_name"].tolist()
     for n in unmatched:
@@ -87,7 +105,8 @@ def main():
                         f"not loaded (its enrolments go to quarantine)")
 
     # --- 2. other CRICOS higher-education providers ---------------------------------------
-    crosswalked_names = set(inst.loc[matched["cricos_provider_code"], "Institution Name"])
+    on_register = matched.loc[~off_register, "cricos_provider_code"]
+    crosswalked_names = set(inst.loc[on_register, "Institution Name"])
     others = inst[inst.index.isin(he_codes) & ~inst.index.isin(matched["cricos_provider_code"])]
     secondary = others["Institution Name"].isin(crosswalked_names)
     removed["cricos_secondary_registrations_of_listed_universities"] = int(secondary.sum())
@@ -101,9 +120,13 @@ def main():
                                                   & ~inst.index.isin(matched["cricos_provider_code"])).sum())
 
     df = pd.concat([hessc_rows, cricos_rows], ignore_index=True)
-    attrs = inst.loc[df["cricos_provider_code"]]
+    attrs = inst.reindex(df["cricos_provider_code"])           # off-register codes -> empty row
     df["provider_type"] = attrs["Institution Type"].map(PROVIDER_TYPE).values
     df["state"] = attrs["Postal Address State"].values
+    fallback = matched.loc[off_register].set_index("cricos_provider_code")
+    use = df["cricos_provider_code"].isin(fallback.index)
+    df.loc[use, "provider_type"] = df.loc[use, "cricos_provider_code"].map(fallback["provider_type"]).values
+    df.loc[use, "state"] = df.loc[use, "cricos_provider_code"].map(fallback["state"]).values
     df["sector"] = pd.NA
     df["teqsa_id"] = pd.NA
 
@@ -156,7 +179,7 @@ def main():
         "warnings": warnings + ["teqsa_id is blank for every row: TEQSA register not collected",
                                 "sector is blank for every row: no source distinguishes university / TAFE / other"],
         "measure": "n/a (dimension table)",
-        "year_convention": "n/a; CRICOS register as at 2026-08-09",
+        "year_convention": "n/a; CRICOS register as downloaded (date: retrieved_utc in data/MANIFEST.csv)",
         "transformations": [
             "CRICOS Government -> public, Private -> private",
             "HESSC names kept as the canonical name for the universities HESSC lists",
@@ -170,7 +193,7 @@ def main():
     ], [
         ("name", "Institution name (HESSC spelling for HESSC universities, CRICOS spelling otherwise)", "text <=255", "HESSC Institution / CRICOS Institution Name, whitespace collapsed", "-", "-"),
         ("provider_type", "public or private", "text: public|private", "CRICOS Institution Type: Government->public, Private->private", "-", "-"),
-        ("state", "State of the registered postal address", "text <=10, nullable", "CRICOS Postal Address State", "-", "as at 2026-08-09"),
+        ("state", "State of the registered postal address", "text <=10, nullable", "CRICOS Postal Address State", "-", "as at the CRICOS download date"),
         ("sector", "Provider sector", "text, blank", "No source available", "-", "-"),
         ("teqsa_id", "TEQSA provider ID", "text, blank", "TEQSA register not collected", "-", "-"),
         ("cricos_provider_code", "CRICOS provider code (natural key for joins; not a models.py column)", "text, 5 digits + letter", "CRICOS Provider Code; HESSC rows via config/institution_crosswalk.csv", "-", "-"),
