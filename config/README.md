@@ -6,7 +6,7 @@ team sign-off; the cleaning report lists them as warnings until the status is ch
 | File | Used for | Rule |
 |---|---|---|
 | `asced_broad_field_map.csv` | `fields_of_study.broad_field` | ASCED broad field -> STEM / Social Studies / other. Codes come from the CRICOS course register. |
-| `institution_crosswalk.csv` | `institutions`, `enrollment_stats` | HESSC institution name -> CRICOS provider code. Matched on the code, never on fuzzy names alone. |
+| `institution_crosswalk.csv` | `institutions`, `enrollment_stats` | HESSC institution name -> CRICOS provider code. Matched on the code, never on fuzzy names alone. `provider_type` / `state` are filled only for universities that may no longer be on the current CRICOS register (e.g. merged), and are used only in that case. |
 | `country_map.csv` | staging visa / PRISMS tables | Only labels that differ between sources. Standard form = Department of Education (PRISMS) spelling. Unlisted labels pass through unchanged. |
 
 Deliberately **not** mapped (ambiguous, left as the source label): Yugoslavia / Yugoslavia, Fed Republic of /

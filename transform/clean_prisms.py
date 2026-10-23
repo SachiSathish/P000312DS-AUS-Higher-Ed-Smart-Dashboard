@@ -3,20 +3,27 @@
 STAGING ONLY: models.py has no table for PRISMS, and PRISMS has no institution, so it cannot
 feed enrollment_stats. Kept tidy so it is ready if a table is added.
 
-Source: PRISMS "all data" YTD workbook to May 2026 (pivot cache, 3.58M records). The "latest"
-workbook is a subset of the same series and is not processed (it would duplicate rows).
+Source: PRISMS "all data" YTD workbook (pivot cache, ~3.6M records). The Department publishes a
+new release every month and the downloader saves the newest one, named ..._YYYY-MM.xlsx, so the
+file is looked up in data/MANIFEST.csv rather than hard-coded. The "latest" workbook is a subset
+of the same series and is not processed (it would duplicate rows).
 
 Values are YEAR-TO-DATE CUMULATIVE: the May row already includes Jan-Apr. Never sum across
 months; use one month per year (December = full calendar year; May 2026 = current part-year).
 
-Reconciled against the published May YTD enrolments in the infographic PDF from the same release.
+Reconciled against the published May 2026 YTD enrolments (infographic PDF of the May 2026 release).
+Those figures are an exact check only for the May 2026 release; for a later release the same
+comparison is reported as warnings, because later releases may revise earlier months.
 """
+
+import re
 
 import pandas as pd
 
 import common as c
 
-SRC = "bronze/education-international/education_intl-students-ytd-all_2026-05.xlsx"
+SRC_PATTERN = re.compile(r"bronze/education-international/education_intl-students-ytd-all_(\d{4}-\d{2})\.xlsx")
+RECONCILED_RELEASE = "2026-05"                      # release the PUBLISHED_MAY figures come from
 OUT = c.STAGING / "prisms_international_students_ytd.csv"
 MONTHS = {m: i for i, m in enumerate(
     ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], 1)}
@@ -33,7 +40,18 @@ PUBLISHED_MAY = {
 }
 
 
+def source_file():
+    """The newest PRISMS "all data" workbook listed in MANIFEST.csv, and its release (YYYY-MM)."""
+    found = sorted((m.group(1), f) for f in c.manifest()["file"] if (m := SRC_PATTERN.fullmatch(f)))
+    if not found:
+        raise SystemExit("No education_intl-students-ytd-all_YYYY-MM.xlsx in data/MANIFEST.csv "
+                         "(run ingestion/download_data.py)")
+    release, path = found[-1]
+    return path, release
+
+
 def main():
+    SRC, release = source_file()
     raw, declared = c.read_pivot_cache(c.raw_path(SRC))
     raw_rows = len(raw)
     enr, enr_stats = c.to_number(raw["DATA_YTD_Enrolments"])
@@ -70,6 +88,13 @@ def main():
             checks[f"{year} {sector}"] = {"published": published, "processed": got}
             if got != published:
                 failures.append(f"{year} {sector}: processed {got:,} != published {published:,}")
+    later_release = release != RECONCILED_RELEASE
+    if later_release:
+        # The published figures belong to the May 2026 release; a later release may have revised them.
+        warn_revisions = [f"{f} (May 2026 release figure; this is the {release} release)" for f in failures]
+        failures, checks = [], {}
+    else:
+        warn_revisions = []
 
     rows = c.write_csv(df, OUT, sort_by=GRAIN)
     c.write_report("prisms_international_students_ytd", {
@@ -88,7 +113,11 @@ def main():
         "countries_remapped": remapped,
         "category_values": c.category_values(df, ["month", "state", "sector", "provider_type",
                                                   "new_to_australia", "ends_this_year", "citizenship_country"]),
-        "warnings": ["country mapping config/country_map.csv is PROPOSED",
+        "release": release,
+        "warnings": warn_revisions + ([f"published YTD-May check applies to the {RECONCILED_RELEASE} release only; "
+                                        f"this is the {release} release, differences above are reported, not failed"]
+                                       if later_release else []) + [
+                     "country mapping config/country_map.csv is PROPOSED",
                      "YTD cumulative values: do not sum across months",
                      "state 'NAT' kept as published (national / no single state)"],
         "measure": "YTD enrolments and YTD commencements (a student in two courses = two enrolments)",
