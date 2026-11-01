@@ -6,3 +6,10 @@ __pycache__/
 .env
 
 data/processed/staging/
+
+# Streamlit dashboard
+.venv-dashboard/
+.env
+highered-dashboard-demo.zip
+__pycache__/
+*.pyc
